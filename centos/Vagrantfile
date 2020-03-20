@@ -1,0 +1,8 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby et ts=2 sts=2 sw=2 :
+
+# centos7 vm
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+end
