@@ -13,7 +13,7 @@ nodeconfig = {
   #:ip => "192.168.123.100",
   #:ram => 1024
 
-  # provisioners:
+  # possibly, additional provisioners:
   :provisioners => [
   #  {
   #    :type => "ansible",
@@ -28,7 +28,7 @@ nodeconfig = {
 
 # TODO: read from config file
 
-# make sure the required ietms (box and ram) are set
+# make sure the required items (box and ram) are set
 
 if not nodeconfig[:box]
   nodeconfig[:box] = default_box
@@ -64,5 +64,9 @@ Vagrant.configure("2") do |config|
   # Based on that, one can run ansible without vagrant.
   config.vm.provision "no-op", type:'ansible' do |ansible|
     ansible.playbook = "no-op-playbook.yml"
+  end
+
+  # possibly more provisioners here
+  nodeconfig[:provisioners].each do
   end
 end
