@@ -3,9 +3,61 @@
 
 # centos7 vm
 
+default_box = "centos/7"
+# should we prescribe a default ram at all?
+default_ram = 512
+
+nodeconfig = {
+  :hostname => "myhost",
+  :box => "centos/7",
+  #:ip => "192.168.123.100",
+  #:ram => 1024
+
+  # provisioners:
+  :provisioners => [
+  #  {
+  #    :type => "ansible",
+  #    :provisioner => "playbook.yml"
+  #  },
+  #  {
+  #    :type => "shell",
+  #    :provisioner => "script.sh:
+  #  }
+  ]
+}
+
+# TODO: read from config file
+
+# make sure the required ietms (box and ram) are set
+
+if not nodeconfig[:box]
+  nodeconfig[:box] = default_box
+end
+
+if not nodeconfig[:ram]
+  nodeconfig[:ram] = default_ram
+end
+
+# TODO: store config
+
+
+# now all the required items are set
+
+
 Vagrant.configure("2") do |config|
-  config.vm.box = "centos/7"
-  #config.vm.hostname = "foo"
+  config.vm.box = nodeconfig[:box]
+
+  if nodeconfig[:hostname]
+    config.vm.hostname = nodeconfig[:hostname]
+  end
+
+  config.vm.provider :libvirt do |lv|
+    lv.memory = nodeconfig[:ram]
+  end
+
+  if nodeconfig[:ip]
+    nodeconfig.vm.network :private_network, ip: node[:ip]
+  end
 
   # Run a no-op playbook to create the inventory file.
   # Based on that, one can run ansible without vagrant.
